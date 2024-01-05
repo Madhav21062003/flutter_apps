@@ -1,0 +1,5 @@
+// Steps to create a menu
+Step-1- Create your own Design
+step-2- Create a menu directory/ folder in res folder and inside this folder create a menu resource file
+step-3- Create a class for menu options
+step-4- Add menu in MainActivity.kt

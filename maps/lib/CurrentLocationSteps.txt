@@ -1,0 +1,224 @@
+Step 1: Set Up Your Flutter Project
+
+Create a new Flutter project using your preferred IDE or command line.
+Make sure you have the necessary dependencies added to your pubspec.yaml file:
+yaml
+Copy code
+dependencies:
+  flutter:
+    sdk: flutter
+  google_maps_flutter: ^2.0.10
+  geolocator: ^7.8.1
+  geocoding: ^2.0.1
+
+===============================================================================================================================
+
+
+Step 2: Create a New Dart File
+
+Create a new Dart file, for example, current_location_screen.dart.
+
+===============================================================================================================================
+
+Step 3: Import Dependencies
+
+Import the required packages at the top of your Dart file:
+dart
+Copy code
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+
+===============================================================================================================================
+
+Step 4: Define a StatefulWidget
+
+Define a StatefulWidget named CurrentLocationScreen.
+dart
+Copy code
+class CurrentLocationScreen extends StatefulWidget {
+  const CurrentLocationScreen({Key? key}) : super(key: key);
+
+  @override
+  _CurrentLocationScreenState createState() => _CurrentLocationScreenState();
+}
+
+===============================================================================================================================
+
+
+Step 5: Create the State Class
+
+Create the state class _CurrentLocationScreenState which extends State<CurrentLocationScreen>.
+dart
+Copy code
+class _CurrentLocationScreenState extends State<CurrentLocationScreen> {
+  // Your code will go here...
+}
+
+===============================================================================================================================
+
+
+Step 6: Define State Variables
+
+Declare state variables for storing the user's address and GoogleMapController.
+
+String address = '';
+final Completer<GoogleMapController> _controller = Completer();
+
+===============================================================================================================================
+
+
+Step 7: Request Location Permission and Get User's Location
+
+Implement _getUserCurrentLocation method to request location permission and retrieve the user's
+current position using Geolocator.
+
+Future<Position> _getUserCurrentLocation() async {
+  await Geolocator.requestPermission()
+      .then((value) {})
+      .onError((error, stackTrace) {
+    print(error.toString());
+  });
+
+  return await Geolocator.getCurrentPosition();
+}
+
+===============================================================================================================================
+
+Step 8: Define Markers
+
+Create a list of markers to display on the map.
+
+final List<Marker> _markers = <Marker>[];
+
+===============================================================================================================================
+
+Step 9: Initialize Google Map Camera Position
+
+Set up the initial camera position for the Google Map.
+
+static const CameraPosition _kGooglePlex = CameraPosition(
+  target: LatLng(33.6844, 73.0479),
+  zoom: 14,
+);
+
+===============================================================================================================================
+
+
+Step 10: Initialize Predefined Markers
+
+Create a list of predefined markers.
+
+List<Marker> list = const [
+  Marker(
+    markerId: MarkerId('1'),
+    position: LatLng(33.6844, 73.0479),
+    infoWindow: InfoWindow(title: 'some Info '),
+  ),
+];
+
+===============================================================================================================================
+
+
+Step 11: Implement initState
+
+Inside the initState method, add the predefined markers to the list of markers and load the user's location
+data using the loadData method.
+
+@override
+void initState() {
+  super.initState();
+  _markers.addAll(list);
+  loadData();
+}
+
+===============================================================================================================================
+
+
+Step 12: Implement loadData Method
+
+Implement the loadData method to fetch the user's current location, add a marker, and update the camera position.
+dart
+Copy code
+loadData() {
+  _getUserCurrentLocation().then((value) async {
+    _markers.add(Marker(
+        markerId: const MarkerId('SomeId'),
+        position: LatLng(value.latitude, value.longitude),
+        infoWindow: InfoWindow(title: address)));
+
+    final GoogleMapController controller = await _controller.future;
+    CameraPosition _kGooglePlex = CameraPosition(
+      target: LatLng(value.latitude, value.longitude),
+      zoom: 14,
+    );
+    controller.animateCamera(CameraUpdate.newCameraPosition(_kGooglePlex));
+    setState(() {});
+  });
+}
+
+===============================================================================================================================
+
+Step 13: Build the UI
+
+Implement the build method to create the user interface.
+dart
+Copy code
+@override
+Widget build(BuildContext context) {
+  return Scaffold(
+    appBar: AppBar(
+      centerTitle: true,
+      backgroundColor: Colors.deepOrange,
+      title: Text('Flutter Google Map'),
+    ),
+    body: SafeArea(
+      child: Stack(
+        alignment: Alignment.bottomCenter,
+        children: [
+          // Google Map Widget
+          GoogleMap(
+            initialCameraPosition: _kGooglePlex,
+            mapType: MapType.normal,
+            myLocationButtonEnabled: true,
+            myLocationEnabled: true,
+            markers: Set<Marker>.of(_markers),
+            onMapCreated: (GoogleMapController controller) {
+              _controller.complete(controller);
+            },
+          ),
+          // UI overlay
+          Container(
+            // ... (Continue building UI)
+          ),
+        ],
+      ),
+    ),
+  );
+}
+
+===============================================================================================================================
+
+Step 14: Implement Button and Display Address
+
+Inside the UI overlay, implement a button to get the user's current location and display the address.
+dart
+Copy code
+InkWell(
+  onTap: () {
+    _getUserCurrentLocation().then((value) async {
+      // ... (Continue handling button tap)
+    });
+  },
+  child: Padding(
+    // ... (Button styling)
+  ),
+),
+Padding(
+  padding: const EdgeInsets.symmetric(horizontal: 20),
+  child: Text(address), // Display the address
+)
+That's it! You've implemented a Flutter app that displays a Google Map, retrieves the user's current location,
+ and displays their address. Remember to handle dependencies, imports, and error checks as needed.

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "84288995322",
+    "project_id": "scocialmediaapp",
+    "storage_bucket": "scocialmediaapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:84288995322:android:bf9f28374e89dd88e36e43",
+        "android_client_info": {
+          "package_name": "com.example.scocialmediaapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAxaOkh7Zpyhd4DGQI95GowI9QyFiAEUxA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

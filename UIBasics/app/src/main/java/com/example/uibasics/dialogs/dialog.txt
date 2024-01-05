@@ -1,0 +1,4 @@
+
+
+Step-1  Create your Ui in activity_main .xml
+step-2  Implement AlertDialogBox in MainActivity.kt
